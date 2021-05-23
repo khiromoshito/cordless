@@ -11,7 +11,7 @@ declare enum CommandArgType {
     NEWS_CHANNEL = "channel-news"
 }
 
-declare module "cordless" {
+declare module "cordless.js" {
 
     import DiscordJS from "discord.js"
 

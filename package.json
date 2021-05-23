@@ -1,13 +1,14 @@
 {
-  "name": "cordless",
-  "version": "0.5.0",
+  "name": "cordless.js",
+  "version": "0.5.1",
   "description": "A handy commands framework for discord.js",
+  "main": "./bin/index.js",
   "types": "./bin/types/types.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": ["discord.js", "discord", "framework", "cordless"],
-  "author": "k.hiromoshito",
+  "author": "kazuki.hiromoshito",
   "license": "ISC",
   "dependencies": {
     "discord.js": "^12.5.3"
