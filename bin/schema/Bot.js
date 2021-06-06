@@ -3,6 +3,10 @@ const CommandArgsHandler = require("../handlers/CommandArgsHandler");
 const ExceptionHandler = require("../handlers/ExceptionHandler");
 const CommandMessage = require("./CommandMessage");
 const CommandOptions = require("./CommandOptions");
+const EventHandler = require("../handlers/EventHandler");
+
+
+
 
 class Bot extends DiscordJS.Client {
 
@@ -53,10 +57,11 @@ class Bot extends DiscordJS.Client {
 
         client.commands = commands;
 
+        client.id = ++EventHandler.counter + "";
+        EventHandler.clients[client.id] = {};
+
         
 
-
-       
         
 
 
@@ -65,11 +70,13 @@ class Bot extends DiscordJS.Client {
         client.on = (event, listener) => {
             if(event === "message")
                 client._on("message", (message)=>listener(_onMessage(client, message)));
+            if(event === "commandError")
+                EventHandler.push(client.id, "commandError", listener);
             else 
                 client._on(event, listener);
         }
 
-
+        client._on("message", (message)=>_onMessage(client, message));
         
 
         return client;
@@ -130,6 +137,7 @@ function _onMessage(client, message) {
         commandOptions.execute(commandMessage);
     } else {
         commandOptions.error(commandMessage, argsCompiledResponse.exception);
+        EventHandler.emit(client.id, "error", [commandMessage, argsCompiledResponse.exception]);
     }
     
 
