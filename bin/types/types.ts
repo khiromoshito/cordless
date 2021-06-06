@@ -58,6 +58,15 @@ declare module "cordless.js" {
             }[]
         })
 
+        /** List of general prefixes */
+        public prefixes: string[]
+
+        /** Primary bot prefix */
+        public get prefix(): string
+
+        /** Gets all prefixes corresponding to guildId */
+        public get guildPrefixes(): Map<string, string>
+
         public commands: DiscordJS.Collection<String, CommandOptions>
 
         public on<K extends keyof DiscordJS.ClientEvents>(event: K, listener: (...args: DiscordJS.ClientEvents[K]) => void): this;
@@ -66,6 +75,7 @@ declare module "cordless.js" {
         listener: (...args: any[]) => void,
         ): this;
         public on(event: "message", listener: (message: Message) => any | Promise<any>)
+        public on(event: "commandError", listener: (command: CommandMessage, error: CommandException) => any | Promise<any>)
     }
 
     export class Message extends DiscordJS.Message {
@@ -109,7 +119,7 @@ declare module "cordless.js" {
         public guild: DiscordJS.Guild;
     }
 
-    export class CommandException {
+    export class CommandException extends Error {
 
     }
 
