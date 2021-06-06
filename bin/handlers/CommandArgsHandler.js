@@ -70,11 +70,13 @@ var CommandArgsHandler = {
             for(; i<argsOptions.length; i++) 
                 if(argsOptions[i].required)
                     return new CommandArgsCompiledResponse(false,
-                        CommandExceptionHander.evaluateException(CommandExceptionType.LACK_ARGS));
+                        CommandExceptionHander.evaluateException(commandOptions, CommandExceptionType.LACK_ARGS, 
+                            {argsCount: argsStr.split(/[ \n]+/).length}));
         } else {
             if(argsStr.length > 0)
                 return new CommandArgsCompiledResponse(false,
-                    CommandExceptionHander.evaluateException(CommandExceptionType.EXCESS_ARGS));
+                    CommandExceptionHander.evaluateException(commandOptions, CommandExceptionType.EXCESS_ARGS,
+                        {argsCount: argsStr.split(/[ \n]+/).length}));
         }
 
         

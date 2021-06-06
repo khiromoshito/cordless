@@ -137,7 +137,8 @@ function _onMessage(client, message) {
         commandOptions.execute(commandMessage);
     } else {
         commandOptions.error(commandMessage, argsCompiledResponse.exception);
-        EventHandler.emit(client.id, "error", [commandMessage, argsCompiledResponse.exception]);
+        EventHandler.emit(client.id, "commandError", [commandMessage, argsCompiledResponse.exception]);
+        //console.log(`CommandException: ` + argsCompiledResponse.exception.message);
     }
     
 

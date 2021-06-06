@@ -9,7 +9,7 @@ const EventHandler = {
     },
 
     emit: (clientId, event, args) => {
-        for(const listener of (EventHandler.clients[clientId]?.[event] || [])) {
+        for(const listener of ((EventHandler.clients[clientId]?.[event]) || [])) {
             listener(...args);
         }
     }

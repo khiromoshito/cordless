@@ -6,18 +6,16 @@ module.exports = {
 
     /**
      * Fetches `CommandException` from exception type
-     * @param {CommandMessage} command
+     * @param {CommandOptions} command
      * @param {number} type
      * @returns {CommandException}
      */
     evaluateException: (command, type, args = {}) => {
         if(type===CommandExceptionType.LACK_ARGS)
-            return new CommandException(`Minimum of ${command.options.minArgs} arguments required, 
-                but only ${command.args.length} found.`, type);
+            return new CommandException(`Minimum of ${command.minArgs} arguments required, but only ${args.argsCount} found.`, type);
 
         if(type===CommandExceptionType.EXCESS_ARGS)
-            return new CommandException(`Maximum of ${command.options.minArgs} arguments required, 
-                but found ${command.args.length}.`, type);
+            return new CommandException(`Maximum of ${command.minArgs} arguments required, but found ${args.argsCount}.`, type);
 
         if(type===CommandExceptionType.UNMATCHED_ARG)
             return new CommandException(`Unmatched argument types at position ${args.pos} (expected '${args.expectedType}' but found '${args.foundType}')`, type);
