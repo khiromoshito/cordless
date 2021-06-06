@@ -4,6 +4,6 @@ module.exports = {
     },
 
     warn: (message) => {
-        console.log(`Cordless Warning: ${messge}`);
+        console.log(`Cordless Warning: ${message}`);
     }
 }
