@@ -15,9 +15,16 @@ var CommandArgsHandler = {
      * @returns {CommandArgsCompiledResponse}
      */
     compileArgs: (message, commandOptions) => {
-        let separatorRegex = new RegExp(/[ \n]/);
+        let separatorRegex = new RegExp("[ \n]");
 
         let firstSeparatorPos = CommandArgsHandler.regexIndexOf(message.content, separatorRegex);
+        if(firstSeparatorPos === 0) {
+            const requiredCommandsSize = commandOptions.requiredCommands.length;
+            if(requiredCommandsSize > 0) 
+                return new CommandArgsCompiledResponse(false,
+                    CommandExceptionHander.evaluateException(commandOptions, CommandExceptionType.LACK_ARGS, 
+                        {argsCount: 0, minArgs: requiredCommandsSize}));
+        }
         if(!firstSeparatorPos) return new CommandArgsCompiledResponse(true, null, new CommandArgCollection());
 
         let argsStr = message.content.slice(firstSeparatorPos + 1).trim();
@@ -42,7 +49,8 @@ var CommandArgsHandler = {
                 arg = argsStr;
                 argsStr = "";
             } else {
-                let end = CommandArgsHandler.regexIndexOf(argsStr, separatorRegex); // arg end index
+                let end = CommandArgsHandler.regexIndexOf(argsStr, separatorRegex, true); // arg end index
+                console.log(`Arg ${i} ends at: ${end}`);
                 arg = argsStr.slice(0, end);
 
                 argsStr = argsStr.slice(end).trim();
@@ -50,7 +58,10 @@ var CommandArgsHandler = {
 
             let compiledArg = CommandArgsHandler._compileArg(message, arg, argOption);
 
+            console.log(`Comparing args type: ${compiledArg.type} and ${argOption.type}`);
+
             if(compiledArg.type!==argOption.type) {
+                
                 if(!argOption.required) i++;
                 else return new CommandArgsCompiledResponse(false, 
                     CommandExceptionHander.evaluateException(commandOptions, CommandExceptionType.UNMATCHED_ARG, 
@@ -71,7 +82,7 @@ var CommandArgsHandler = {
                 if(argsOptions[i].required)
                     return new CommandArgsCompiledResponse(false,
                         CommandExceptionHander.evaluateException(commandOptions, CommandExceptionType.LACK_ARGS, 
-                            {argsCount: argsStr.split(/[ \n]+/).length}));
+                            {argsCount: argsStr.split(/[ \n]+/).length, minArgs: commandOptions.requiredCommands.length}));
         } else {
             if(argsStr.length > 0)
                 return new CommandArgsCompiledResponse(false,
@@ -89,8 +100,11 @@ var CommandArgsHandler = {
 
     },
 
-    regexIndexOf: (string, regex) => {
-        return regex.exec(string)?.index || 0;
+    regexIndexOf: (string, regex, extending = false) => {
+        const pos = regex.exec(string)?.index || (extending ? string.length : 0);
+        console.log(`${pos} (${string})`);
+
+        return pos;
     },
 
     /**

@@ -22,40 +22,7 @@ declare module "cordless.js" {
             prefix?: string | string[],
 
             /** List of bot commands */
-            commands: {
-                /** Command name and main trigger */
-                name?: string,
-                
-                /** Other triggers for command */
-                aliases?: string[],
-
-                /** Ran when command is triggered */
-                execute?: CommandExecutionCallback,
-
-                /** Ran when error occurs before command */
-                error?: CommandExceptionCallback,
-
-                /** Whether a command is executed from a given message*/
-                filter?: CommandFilter,
-
-                /** Command arguments options */
-                args?: {
-                    /** Argument name */
-                    name?: string
-
-                    /** Argument type */
-                    type?: CommandArgTypeString
-
-                    /** Argument choices */
-                    choices?: any[]
-
-                    /** Whether this argument is required */
-                    required?: boolean
-                }[]
-
-                
-
-            }[]
+            commands: CommandOptionsData[] | CommandOptions[]
         })
 
         /** List of general prefixes */
@@ -82,8 +49,8 @@ declare module "cordless.js" {
         /** Whether this message is a command */
         public isCommand: boolean
 
-        /** This bot */
-        public bot: Bot
+        /** Deletes this message after a timeout (in milliseconds) */
+        public dissolve: (delay?: number) => Promise<void>
     }
 
     export class CommandMessage {
@@ -129,6 +96,8 @@ declare module "cordless.js" {
     }
 
     export class CommandOptions {
+
+        constructor(options?:CommandOptionsData)
 
     /** Command name (primary trigger for command)*/
         public name: string
@@ -203,4 +172,39 @@ declare module "cordless.js" {
         "channel-text" | "channel-voice" | "channel-news"
 
     type CollectionGetter = (name: string) => CommandArgument
+
+    type CommandOptionsData = {
+        /** Command name and main trigger */
+        name?: string,
+        
+        /** Other triggers for command */
+        aliases?: string[],
+
+        /** Ran when command is triggered */
+        execute?: CommandExecutionCallback,
+
+        /** Ran when error occurs before command */
+        error?: CommandExceptionCallback,
+
+        /** Whether a command is executed from a given message*/
+        filter?: CommandFilter,
+
+        /** Command arguments options */
+        args?: {
+            /** Argument name */
+            name?: string
+
+            /** Argument type */
+            type?: CommandArgTypeString
+
+            /** Argument choices */
+            choices?: any[]
+
+            /** Whether this argument is required */
+            required?: boolean
+        }[]
+
+        
+
+    }
 }

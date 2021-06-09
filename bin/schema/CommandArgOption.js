@@ -29,9 +29,11 @@ class CommandArgOption {
          * Whether this argument is required
          * @type {Boolean}
          */
-        this.required = options.required !== undefined ? options.required : true;
+        this.required = options.required !== undefined ? options.required : false;
 
     }
+
+
 }
 
 module.exports = CommandArgOption;

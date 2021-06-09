@@ -1,10 +1,9 @@
 const DiscordJS = require("discord.js");
 const CommandArgOption = require("./CommandArgOption");
 
-class CommandArgument extends String {
+class CommandArgument {
     
     constructor(type, text, value, options) {
-        super(text || "");
 
         /** 
          * This argument's type

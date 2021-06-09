@@ -1,6 +1,6 @@
 {
   "name": "cordless.js",
-  "version": "0.5.1",
+  "version": "0.5.31",
   "description": "A handy commands framework for discord.js",
   "main": "./bin/index.js",
   "types": "./bin/types/types.ts",

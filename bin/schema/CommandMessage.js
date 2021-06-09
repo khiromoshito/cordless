@@ -4,6 +4,7 @@ const CommandOptions = require("./CommandOptions");
 const ExceptionHandler = require("../handlers/ExceptionHandler");
 const CommandArgument = require("./CommandArgument");
 const CommandArgCollection = require("./CommandArgCollection");
+const Message = require("./Message");
 
 
 class CommandMessage {
@@ -27,7 +28,7 @@ class CommandMessage {
 
         /**
          * Original message
-         * @type {DiscordJS.Message}
+         * @type {Message}
          */
         this.message = options.message || null;
 

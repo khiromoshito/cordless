@@ -7,10 +7,21 @@ const CommandArgOption = require("./CommandArgOption");
 const CommandArgument = require("./CommandArgument");
 const CommandAttemptResponse = require("./CommandAttemptResponse");
 const CommandException = require("./CommandException");
+const CommandMessage = require("./CommandMessage");
 
 class CommandOptions {
+    /**
+     * @param {{name?: string, category?: string, description?: string, triggers?: string[], execute?: (command: CommandMessage)=>any,error?: (command: CommandMessage, error: CommandException)=>any, filter?: (message: DiscordJS.Message) => Boolean, permissions?: String[], args?: {name?: string, type?: String, choices?: any[], required?: boolean, greedy: Boolean}[]} options
+     */
     constructor(options = {}) {
-        if(!"name" in options) ExceptionHandler.throw("A 'name' must be provided for a command");
+
+        const throwError = (message) => {
+            const commandTag = `['${this.name}']`;
+            const content = `${commandTag} ${message}`;
+
+            ExceptionHandler.throw(content);
+        }
+
         if(!"execute" in options) ExceptionHandler.throw("An 'execute' function must be provided for the command. This is called when the command is triggered. \n\nUsage: function(command) {...}\n\n");
 
         /**
@@ -20,11 +31,28 @@ class CommandOptions {
         this.name = options.name;
 
         /**
+         * Group to which this command belongs
+         * @type {String}
+         */
+        this.category = options.category;
+
+        /**
+         * What this command does
+         * @type {String}
+         */
+        this.description = options.description;
+
+        /**
          * Ran when command is triggered
          * @type {Function}
          */
         this.execute = options.execute;
 
+
+        /**
+         * Required permissions from the command author before execution
+         */
+        this.permissions = options.permissions || [];
 
         /**
          * Whether to execute command based on the message details
@@ -33,10 +61,10 @@ class CommandOptions {
         this.filter = options.filter || ((_)=>true);
 
         /**
-         * Other triggers for command
+         * Keywords for starting the command
          * @type {String[]}
          */
-        this.aliases = options.aliases || [];
+        this.triggers = options.triggers || [];
 
         /**
          * Minimum number of arguments for command
@@ -50,7 +78,7 @@ class CommandOptions {
          */
         this.maxArgs = options.maxArgs || Infinity;
 
-        if(this.minArgs > this.maxArgs) ExceptionHandler.throw("'maxArgs' must not be less than 'minArgs'");
+        if(this.minArgs > this.maxArgs) throwError("'maxArgs' must not be less than 'minArgs'");
 
         /**
          * Options for every command argument
@@ -58,7 +86,7 @@ class CommandOptions {
          */
         this.argOptions = (options.args || []).map((arg, i)=>{
             if(arg.greedy && i+1!==(options.args || []).length)
-                    ExceptionHandler.throw("A greedy argument must be the last argument");
+                throwError("A greedy argument must be the last argument");
 
             return new CommandArgOption(arg, i);
         });
@@ -70,9 +98,14 @@ class CommandOptions {
         /**
          * Ran when an error occurs from the command, including invalid arguments
          * and exceptions thrown by the `execute` method
-         * @type {Function}
+         * @type {(command: CommandMessage, error: CommandException) => any}
          */
-        this.error = options.error || ((_,__)=>{});
+        this.error = options.error;
+    }
+
+
+    get requiredCommands() {
+        return this.argOptions.filter(arg=>arg.required);
     }
 
 

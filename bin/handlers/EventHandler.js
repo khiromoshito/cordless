@@ -5,7 +5,7 @@ const EventHandler = {
     push: (clientId, event, listener) => {
         const clientEvents = EventHandler.clients[clientId];
         if(clientEvents[event]===undefined) clientEvents[event] = [];
-        clientEvents[event].push(listener); 
+        clientEvents[event].push(listener);
     },
 
     emit: (clientId, event, args) => {

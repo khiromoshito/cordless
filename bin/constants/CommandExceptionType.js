@@ -12,6 +12,9 @@ module.exports = {
     UNMATCHED_ARG: 3,
 
     /** Argument value does not match with the expected choices */
-    INVALID_VALUE: 4
+    INVALID_VALUE: 4,
+
+    /** Command author does not have enough permissions to execute command */
+    NO_PERMISSION: 5,
 };
 
