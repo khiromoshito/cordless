@@ -50,16 +50,12 @@ var CommandArgsHandler = {
                 argsStr = "";
             } else {
                 let end = CommandArgsHandler.regexIndexOf(argsStr, separatorRegex, true); // arg end index
-                console.log(`Arg ${i} ends at: ${end}`);
                 arg = argsStr.slice(0, end);
 
                 argsStr = argsStr.slice(end).trim();
             }
 
             let compiledArg = CommandArgsHandler._compileArg(message, arg, argOption);
-
-            console.log(`Comparing args type: ${compiledArg.type} and ${argOption.type}`);
-
             if(compiledArg.type!==argOption.type) {
                 
                 if(!argOption.required) i++;
@@ -102,7 +98,6 @@ var CommandArgsHandler = {
 
     regexIndexOf: (string, regex, extending = false) => {
         const pos = regex.exec(string)?.index || (extending ? string.length : 0);
-        console.log(`${pos} (${string})`);
 
         return pos;
     },
